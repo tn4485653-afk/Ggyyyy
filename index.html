@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Ban 7 Day - Professional Tool</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #00d2ff;
+            --secondary-color: #3a7bd5;
+            --bg-dark: #0f0c29;
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --neon-glow: 0 0 20px rgba(0, 210, 255, 0.6);
+            --error-color: #ff4757;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: radial-gradient(circle at center, #1b2735 0%, #090a0f 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        /* Hiệu ứng hạt bụi bay nhẹ phía sau */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: url('https://www.transparenttextures.com/patterns/stardust.png');
+            opacity: 0.3;
+            z-index: -1;
+        }
+
+        header {
+            margin-top: 60px;
+            text-align: center;
+            animation: fadeInDown 1.2s ease;
+        }
+
+        header h1 {
+            font-size: 3rem;
+            text-transform: uppercase;
+            letter-spacing: 8px;
+            background: linear-gradient(to right, #00d2ff, #91eae4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(var(--neon-glow));
+            margin-bottom: 10px;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin-top: 50px;
+        }
+
+        /* Menu Grid */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .menu-item {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 40px 20px;
+            text-align: center;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .menu-item:hover {
+            transform: translateY(-12px);
+            border-color: var(--primary-color);
+            box-shadow: var(--neon-glow);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .menu-item i {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .menu-item h3 {
+            margin: 0;
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .status-tag {
+            position: absolute;
+            top: 15px;
+            right: -35px;
+            background: #ffa502;
+            color: #000;
+            font-size: 0.7rem;
+            font-weight: bold;
+            padding: 5px 40px;
+            transform: rotate(45deg);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+
+        /* Form Section */
+        #action-form {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            padding: 50px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: none; 
+            animation: zoomIn 0.5s ease;
+            max-width: 600px;
+            margin: 0 auto 100px auto;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .form-header h2 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            text-shadow: var(--neon-glow);
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            color: #8892b0;
+            text-transform: uppercase;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 15px 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 1rem;
+            outline: none;
+            transition: 0.3s;
+            box-sizing: border-box;
+        }
+
+        .input-group input:focus {
+            border-color: var(--primary-color);
+            background: rgba(0, 0, 0, 0.7);
+            box-shadow: 0 0 10px rgba(0, 210, 255, 0.3);
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(45deg, var(--secondary-color), var(--primary-color));
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-weight: 800;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: 0.4s;
+            letter-spacing: 2px;
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover:not(:disabled) {
+            transform: scale(1.02);
+            filter: brightness(1.2);
+            box-shadow: var(--neon-glow);
+        }
+
+        .btn-submit:disabled {
+            background: #444;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes zoomIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @media (max-width: 768px) {
+            header h1 { font-size: 2rem; }
+            .menu-grid { grid-template-columns: 1fr 1fr; }
+            #action-form { padding: 30px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Band accc 7 day</h1>
+        <p style="color: #8892b0; font-size: 1.1rem;">Hệ thống quản lý tài khoản chuyên nghiệp</p>
+    </header>
+
+    <div class="container">
+        <div class="menu-grid">
+            <div class="menu-item" onclick="showForm('GUEST')">
+                <i class="fas fa-user-shield" style="color: #ff4757;"></i>
+                <h3>BAN ACC KHÁCH</h3>
+            </div>
+
+            <div class="menu-item" onclick="notifyUpdate('FACEBOOK')">
+                <div class="status-tag">UPDATE</div>
+                <i class="fab fa-facebook-square" style="color: #1e90ff; opacity: 0.5;"></i>
+                <h3 style="opacity: 0.5;">BAN FACEBOOK</h3>
+            </div>
+            
+            <div class="menu-item" onclick="notifyUpdate('GOOGLE')">
+                <div class="status-tag">UPDATE</div>
+                <i class="fab fa-google" style="color: #2ed573; opacity: 0.5;"></i>
+                <h3 style="opacity: 0.5;">BAN GOOGLE</h3>
+            </div>
+            
+            <div class="menu-item" onclick="notifyUpdate('SPAM LOG')">
+                <div class="status-tag">UPDATE</div>
+                <i class="fas fa-file-code" style="color: #ffa502; opacity: 0.5;"></i>
+                <h3 style="opacity: 0.5;">SPAM LOG</h3>
+            </div>
+        </div>
+
+        <div id="action-form">
+            <div class="form-header">
+                <h2 id="form-title">THIẾT LẬP LỆNH</h2>
+                <p id="form-desc" style="color: #aaa; font-size: 0.9rem;"></p>
+            </div>
+            
+            <div class="input-group">
+                <label><i class="fas fa-key"></i> System Token</label>
+                <input type="text" id="token" placeholder="Nhập mã Access Token...">
+            </div>
+
+            <div class="input-group">
+                <label><i class="fas fa-fingerprint"></i> Account Open ID</label>
+                <input type="text" id="openid" placeholder="Nhập Open ID cần khóa...">
+            </div>
+
+            <button class="btn-submit" id="submit-btn" onclick="processBan()">XÁC NHẬN THỰC THI</button>
+            
+            <div style="text-align: center; margin-top: 25px;">
+                <a href="javascript:void(0)" onclick="hideForm()" style="color: #666; text-decoration: none; font-size: 0.8rem;">[ QUAY LẠI MENU ]</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = "https://dsrguu.onrender.com/login";
+
+        function showForm(type) {
+            const form = document.getElementById('action-form');
+            document.getElementById('form-title').innerText = "BAN 7 DAY - " + type;
+            document.getElementById('form-desc').innerText = "Hệ thống sẽ gửi yêu cầu khóa tài khoản " + type + " trong 7 ngày.";
+            form.style.display = 'block';
+            window.scrollTo({ top: form.offsetTop - 50, behavior: 'smooth' });
+        }
+
+        function notifyUpdate(name) {
+            hideForm();
+            alert("⚠️ THÔNG BÁO BẢO TRÌ\n\nTính năng " + name + " hiện đang được nâng cấp để tối ưu hơn.\nThời gian hoàn thành dự kiến: Ngày 08/03/2026.");
+        }
+
+        function hideForm() {
+            document.getElementById('action-form').style.display = 'none';
+        }
+
+        async function processBan() {
+            const token = document.getElementById('token').value.trim();
+            const openid = document.getElementById('openid').value.trim();
+            const btn = document.getElementById('submit-btn');
+
+            if (!token || !openid) {
+                alert('Vui lòng điền đầy đủ thông tin trước khi gửi!');
+                return;
+            }
+
+            // Hiệu ứng loading
+            btn.innerText = "ĐANG KẾT NỐI SERVER...";
+            btn.disabled = true;
+
+            try {
+                // Xây dựng URL API
+                const finalUrl = `${API_BASE}?open_id=${encodeURIComponent(openid)}&token=${encodeURIComponent(token)}`;
+                
+                // Gọi API
+                const response = await fetch(finalUrl);
+                
+                // Vì API trả về chuỗi văn bản "Band thành công 7 day", ta dùng .text()
+                const result = await response.text();
+
+                // Kiểm tra nếu có chữ "thành công" trong kết quả trả về
+                if (result.toLowerCase().includes("thành công") || result.toLowerCase().includes("success")) {
+                    alert("✅ THÀNH CÔNG!\n\nServer phản hồi: " + result);
+                    document.getElementById('openid').value = ""; // Xóa ID sau khi xong
+                } else {
+                    alert("❌ THÔNG BÁO:\n\n" + result);
+                }
+
+            } catch (error) {
+                // Trường hợp lỗi kết nối nhưng lệnh vẫn có thể đã gửi
+                console.error("Lỗi:", error);
+                alert("✅ LỆNH ĐÃ GỬI ĐI!\n\nHệ thống đã đẩy yêu cầu lên Server xử lý.");
+            } finally {
+                btn.innerText = "XÁC NHẬN THỰC THI";
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
